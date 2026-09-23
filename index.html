@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#eef5ff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="murmur" />
+  <title>murmur</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+  <div class="ambient ambient-c" aria-hidden="true"></div>
+
+  <main class="app-shell">
+    <header class="topbar">
+      <button class="wordmark" id="homeBtn" aria-label="Go to today">murmur</button>
+      <div class="top-actions">
+        <button class="icon-button ghost" id="searchBtn" aria-label="Search">⌕</button>
+        <button class="icon-button ghost" id="settingsBtn" aria-label="Settings">⋯</button>
+      </div>
+    </header>
+
+    <section id="todayView" class="view active" aria-labelledby="todayTitle">
+      <div class="date-row">
+        <button class="date-button" id="dateButton">
+          <span id="todayTitle" class="eyebrow">today</span>
+          <span id="displayDate" class="display-date"></span>
+        </button>
+        <button class="tiny-button" id="jumpTodayBtn" hidden>back to today</button>
+      </div>
+
+      <section class="day-vibe-card" id="dayVibeCard">
+        <div class="vibe-copy">
+          <p class="vibe-kicker">your day, so far</p>
+          <h1 id="dayCaption">Nothing to explain yet.</h1>
+          <p id="dayTags" class="vibe-tags">leave a murmur whenever something sticks.</p>
+        </div>
+        <div class="mood-orb" id="moodOrb" aria-hidden="true">
+          <span class="orb-face">•ᴗ•</span>
+        </div>
+      </section>
+
+      <section class="composer-card">
+        <div id="attachmentPreview" class="attachment-preview" hidden></div>
+        <div id="recordingPanel" class="recording-panel" hidden>
+          <span class="record-dot"></span>
+          <span id="recordingTime">00:00</span>
+          <span class="recording-label">recording your murmur</span>
+        </div>
+        <textarea id="entryText" rows="4" placeholder="what's on your mind?" aria-label="Write a murmur"></textarea>
+        <div class="composer-footer">
+          <div class="composer-tools">
+            <label class="tool-button" for="photoInput" aria-label="Add photos">＋</label>
+            <input id="photoInput" type="file" accept="image/*" multiple hidden />
+            <button class="tool-button mic" id="micBtn" aria-label="Record voice">◉</button>
+            <button class="tool-button" id="entryDateBtn" aria-label="Change entry date">◷</button>
+          </div>
+          <div class="save-wrap">
+            <span id="saveHint" class="save-hint"></span>
+            <button class="send-button" id="saveEntryBtn" aria-label="Save murmur">→</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="entries-section">
+        <div class="section-heading">
+          <h2>murmurs</h2>
+          <span id="entryCount"></span>
+        </div>
+        <div id="entriesList" class="entries-list"></div>
+      </section>
+    </section>
+
+    <section id="pastView" class="view" aria-labelledby="pastTitle">
+      <div class="archive-hero">
+        <p class="eyebrow">past</p>
+        <h1 id="pastTitle">the texture of your days.</h1>
+        <p>Not a streak. Not a score. Just what you left behind.</p>
+      </div>
+
+      <section class="calendar-card">
+        <div class="calendar-head">
+          <button class="icon-button" id="prevMonthBtn" aria-label="Previous month">←</button>
+          <h2 id="monthTitle"></h2>
+          <button class="icon-button" id="nextMonthBtn" aria-label="Next month">→</button>
+        </div>
+        <div class="weekday-row" aria-hidden="true">
+          <span>m</span><span>t</span><span>w</span><span>t</span><span>f</span><span>s</span><span>s</span>
+        </div>
+        <div id="calendarGrid" class="calendar-grid"></div>
+      </section>
+
+      <section class="archive-section">
+        <div class="section-heading"><h2>this month</h2></div>
+        <div id="monthArchive" class="month-archive"></div>
+      </section>
+    </section>
+
+    <section id="murmursView" class="view" aria-labelledby="murmursTitle">
+      <div class="insights-hero">
+        <p class="eyebrow">murmurs</p>
+        <h1 id="murmursTitle">small things you may not have noticed.</h1>
+        <p>Quiet observations from what you've actually written — no homework required.</p>
+      </div>
+      <div id="insightsList" class="insights-list"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <button class="nav-item active" data-view="todayView"><span class="nav-icon">⌂</span><span>today</span></button>
+    <button class="nav-item" data-view="pastView"><span class="nav-icon">◌</span><span>past</span></button>
+    <button class="nav-item" data-view="murmursView"><span class="nav-icon">✦</span><span>murmurs</span></button>
+  </nav>
+
+  <dialog id="dateDialog" class="sheet-dialog">
+    <form method="dialog" class="sheet-card">
+      <div class="sheet-handle"></div>
+      <p class="eyebrow">put this murmur on</p>
+      <h2>another day</h2>
+      <input id="datePicker" type="date" />
+      <div class="dialog-actions">
+        <button value="cancel" class="secondary-button">cancel</button>
+        <button value="save" id="confirmDateBtn" class="primary-button">use this date</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="searchDialog" class="sheet-dialog tall-sheet">
+    <div class="sheet-card">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title-row">
+        <div><p class="eyebrow">look back</p><h2>find a murmur</h2></div>
+        <button class="icon-button" id="closeSearchBtn">×</button>
+      </div>
+      <input id="searchInput" class="search-input" type="search" placeholder="work, a name, a feeling…" autocomplete="off" />
+      <div id="searchResults" class="search-results"></div>
+    </div>
+  </dialog>
+
+  <dialog id="settingsDialog" class="sheet-dialog">
+    <div class="sheet-card">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title-row">
+        <div><p class="eyebrow">your murmur</p><h2>private by default</h2></div>
+        <button class="icon-button" id="closeSettingsBtn">×</button>
+      </div>
+      <p class="settings-copy">This prototype keeps your entries on this device. Export a backup whenever you want.</p>
+      <div class="settings-stack">
+        <button class="settings-row" id="exportBtn"><span>export archive</span><span>↗</span></button>
+        <label class="settings-row" for="importInput"><span>import archive</span><span>↙</span></label>
+        <input id="importInput" type="file" accept="application/json" hidden />
+        <button class="settings-row danger" id="clearBtn"><span>clear this device</span><span>×</span></button>
+      </div>
+      <p class="fine-print">Voice recording needs microphone permission and works best on HTTPS or localhost. Automatic transcript appears only when your browser supports speech recognition.</p>
+    </div>
+  </dialog>
+
+  <template id="entryTemplate">
+    <article class="entry-card">
+      <div class="entry-meta">
+        <span class="entry-time"></span>
+        <div class="entry-actions">
+          <span class="entry-type"></span>
+          <button class="entry-delete" aria-label="Delete murmur">···</button>
+        </div>
+      </div>
+      <p class="entry-text"></p>
+      <div class="entry-images"></div>
+      <div class="entry-audio"></div>
+      <details class="transcript-wrap" hidden>
+        <summary>transcript</summary>
+        <p class="entry-transcript"></p>
+      </details>
+    </article>
+  </template>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
