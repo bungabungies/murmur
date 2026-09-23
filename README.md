@@ -35,6 +35,7 @@ That means:
 - use **… → export archive** to make backups
 - the mood/theme read is deliberately lightweight and local
 - photo content is not analyzed; captions/text/transcripts are what influence the day's vibe
+- 
 
 ## Next build if you want real AI
 
