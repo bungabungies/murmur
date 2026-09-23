@@ -581,3 +581,59 @@ async function init() {
 }
 
 init();
+/* =========================
+   MURMUR LAUNCH SPLASH
+   ========================= */
+
+(function initLaunchSplash() {
+  const splash = document.getElementById("launchSplash");
+  if (!splash) return;
+
+  const SPLASH_DURATION = 3400;
+  const SKIP_DELAY = 900;
+  const COOLDOWN_MS = 10 * 60 * 1000; // 10 menit
+  const STORAGE_KEY = "murmur_last_splash_at";
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const lastShown = Number(localStorage.getItem(STORAGE_KEY) || 0);
+  const now = Date.now();
+
+  // kalau splash baru aja muncul within 10 mins, skip
+  if (now - lastShown < COOLDOWN_MS) {
+    splash.classList.add("is-hidden");
+    return;
+  }
+
+  localStorage.setItem(STORAGE_KEY, String(now));
+
+  let canSkip = false;
+  let finished = false;
+
+  const finishSplash = () => {
+    if (finished) return;
+    finished = true;
+    splash.classList.add("is-hidden");
+
+    setTimeout(() => {
+      splash.remove();
+    }, prefersReducedMotion ? 250 : 900);
+  };
+
+  setTimeout(() => {
+    canSkip = true;
+  }, SKIP_DELAY);
+
+  setTimeout(() => {
+    finishSplash();
+  }, prefersReducedMotion ? 400 : SPLASH_DURATION);
+
+  splash.addEventListener("click", () => {
+    if (canSkip) finishSplash();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && canSkip) {
+      finishSplash();
+    }
+  });
+})();
