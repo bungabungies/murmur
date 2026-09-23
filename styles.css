@@ -229,11 +229,10 @@ audio { width:100%; height:42px; }
 .launch-orb-wrap {
   position: relative;
   width: 300px;
-  height: 300px;
+  height: 350px;
   display: grid;
   place-items: center;
 }
-
 .launch-orb-glow {
   position: absolute;
   inset: 22px;
@@ -455,7 +454,7 @@ audio { width:100%; height:42px; }
 @media (max-width: 640px) {
   .launch-orb-wrap {
     width: 250px;
-    height: 250px;
+    height: 310px;
   }
 
   .launch-orb {
